@@ -29,6 +29,11 @@ namespace InfoSecurity
             _endPoint = new IPEndPoint(_multicastAddress, 1408);
         }
 
+        public void SendCommand<T>(ChatCommand<T> command) where T: class
+        {
+
+        }
+
         public void SendMessage(string msg)
         {
             //byte[] buff = Encoding.UTF8.GetBytes(msg);
@@ -88,14 +93,10 @@ namespace InfoSecurity
                 ICryptoTransform decryptor = des.CreateDecryptor(des.Key, des.IV);
 
                 using (var stream = new MemoryStream(chiper))
+                using (var cstream = new CryptoStream(stream, decryptor, CryptoStreamMode.Read))
+                using (var sr = new StreamReader(cstream))
                 {
-                    using (var cstream = new CryptoStream(stream, decryptor, CryptoStreamMode.Read))
-                    {
-                        using (var sr = new StreamReader(cstream))
-                        {
-                            text = sr.ReadToEnd();
-                        }
-                    }
+                    text = sr.ReadToEnd();
                 }
             }
             return Encoding.UTF8.GetBytes(text);

@@ -9,7 +9,7 @@ namespace InfoSecurity
         public int AliceKey { get; set; }
         public int PrivateBobKey { get; set; }
         public int FullKey { get; set; }
-
+        
         private int GeneratePartialKey()
         {
             int partialKey = (int)Math.Pow(BobKey, AliceKey);

@@ -23,7 +23,7 @@ namespace InfoSecurity
 
         private void UpdateMessages(string message)
         {
-            richTextBox_Chat.BeginInvoke((MethodInvoker)(() => this.richTextBox_Chat.AppendText(message + Environment.NewLine)));
+            richTextBox_Chat.BeginInvoke((MethodInvoker)(() => this.richTextBox_Chat.AppendText(">" + message + Environment.NewLine)));
         }
 
         private void button_Send_Click(object sender, EventArgs e)

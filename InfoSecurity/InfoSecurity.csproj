@@ -53,6 +53,7 @@
     <Compile Include="ChatForm.Designer.cs">
       <DependentUpon>ChatForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ChatCommand.cs" />
     <Compile Include="DiffieHellman.cs" />
     <Compile Include="EncrytpAlgoritms\Atbash.cs" />
     <Compile Include="EncrytpAlgoritms\CeasarCipher.cs" />
