@@ -1,7 +1,9 @@
-﻿using System;
+﻿using InfoSecurity.Commands;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -20,6 +22,7 @@ namespace InfoSecurity
         private readonly IPEndPoint _endPoint;
         public delegate void MessageHandler(string message);
         public event MessageHandler Notify;
+        bool isInit = false;
 
         public ChatController()
         {
@@ -29,15 +32,21 @@ namespace InfoSecurity
             _endPoint = new IPEndPoint(_multicastAddress, 1408);
         }
 
-        public void SendCommand<T>(ChatCommand<T> command) where T: class
+        public void SendCommand(ChatCommand command)
         {
+            if (command.Data is DiffieHellmanData) isInit = true;
 
+            BinaryFormatter formatter = new BinaryFormatter();
+            var stream = new MemoryStream();
+            formatter.Serialize(stream, command);
+            var buff = stream.ToArray();
+            _udpClient.Send(buff, buff.Length, _endPoint);
         }
 
         public void SendMessage(string msg)
         {
-            //byte[] buff = Encoding.UTF8.GetBytes(msg);
-            byte[] buff = Encrypt(msg, ChatData.Key, ChatData.Iv);
+            byte[] buff = Encoding.UTF8.GetBytes(msg);
+            //byte[] buff = Encrypt(msg, ChatData.Key, ChatData.Iv);
             _udpClient.Send(buff, buff.Length, _endPoint);
         }
 
@@ -49,13 +58,45 @@ namespace InfoSecurity
             listener.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             listener.Client.Bind(localEndPoint);
             listener.JoinMulticastGroup(_multicastAddress);
+            BinaryFormatter formatter = new BinaryFormatter();
 
             while (true)
             {
-                //byte[] data = listener.Receive(ref localEndPoint);
-                byte[] data = Decrypt(listener.Receive(ref localEndPoint), ChatData.Key, ChatData.Iv);
-                string text = Encoding.UTF8.GetString(data);
-                Notify?.Invoke(text);
+                byte[] data = listener.Receive(ref localEndPoint);
+                //byte[] data = Decrypt(listener.Receive(ref localEndPoint), ChatData.Key, ChatData.Iv);
+                var stream = new MemoryStream(data);
+                var cmd = (ChatCommand)formatter.Deserialize(stream);
+                switch (cmd.Type)
+                {
+                    case CommandType.Message:
+                        var msgData = (MessageData)cmd.Data;
+                        msgData.DecryptMessage();
+                        string text = msgData.Message;
+                        Notify?.Invoke(text);
+                        break;
+                    case CommandType.DiffieHellmanInit:
+                        if (isInit) continue;
+                        var dhData = (DiffieHellmanData)cmd.Data;
+                        DiffieHellman.p = dhData.p;
+                        DiffieHellman.g = dhData.g;
+                        DiffieHellman.TheyPublicKey = dhData.PublicKey;
+                        Notify?.Invoke($"Получены данные: p {DiffieHellman.p}, g {DiffieHellman.g}, TPK {DiffieHellman.TheyPublicKey}");
+                        Notify?.Invoke($"Ключ создан: {DiffieHellman.Key}");
+                        this.SendCommand(new ChatCommand
+                        {
+                            Type = CommandType.DiffieHellmanEnd,
+                            Data = DiffieHellman.MyPublicKey
+                        });
+                        break;
+                    case CommandType.DiffieHellmanEnd:
+                        if (!isInit) continue;
+                        DiffieHellman.TheyPublicKey = (long)cmd.Data;
+                        Notify?.Invoke($"Ключ создан: {DiffieHellman.Key}");
+                        isInit = false;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 

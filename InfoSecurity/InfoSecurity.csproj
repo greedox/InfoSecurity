@@ -53,7 +53,9 @@
     <Compile Include="ChatForm.Designer.cs">
       <DependentUpon>ChatForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ChatCommand.cs" />
+    <Compile Include="Commands\ChatCommand.cs" />
+    <Compile Include="Commands\DiffieHellmanData.cs" />
+    <Compile Include="Commands\MessageData.cs" />
     <Compile Include="DiffieHellman.cs" />
     <Compile Include="EncrytpAlgoritms\Atbash.cs" />
     <Compile Include="EncrytpAlgoritms\CeasarCipher.cs" />

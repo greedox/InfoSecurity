@@ -4,16 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InfoSecurity
+namespace InfoSecurity.Commands
 {
+    [Serializable]
     enum CommandType
     {
         Message,
-        DiffieHellman
+        DiffieHellmanInit,
+        DiffieHellmanEnd
     }
-    class ChatCommand<T> where T: class
+
+    [Serializable]
+    class ChatCommand
     {
         public CommandType Type { get; set; }
-        public T Data { get; set; }
+        public object Data { get; set; }
     }
 }
