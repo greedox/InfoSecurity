@@ -30,6 +30,7 @@ namespace InfoSecurity
         private void UpdateMessages(string message)
         {
             richTextBox_Chat.BeginInvoke((MethodInvoker)(() => this.richTextBox_Chat.AppendText(">" + message + Environment.NewLine)));
+            richTextBox_Chat.BeginInvoke((MethodInvoker)(() => { richTextBox_Chat.SelectionStart = richTextBox_Chat.TextLength; richTextBox_Chat.ScrollToCaret(); }));
         }
 
         private void button_Send_Click(object sender, EventArgs e)
@@ -45,7 +46,6 @@ namespace InfoSecurity
                     Cipher = cipher,
                     Message = textBox_Message.Text
                 };
-                msgData.EncryptMessage();
                 var msgCmd = new ChatCommand
                 {
                     Type = CommandType.Message,

@@ -93,7 +93,7 @@ namespace InfoSecurity
                         DiffieHellman.p = dhData.p;
                         DiffieHellman.g = dhData.g;
                         DiffieHellman.TheyPublicKey = dhData.PublicKey;
-                        Notify?.Invoke($"Получены данные: p {DiffieHellman.p}, g {DiffieHellman.g}, TPK {DiffieHellman.TheyPublicKey}");
+                        Notify?.Invoke($"Получены данные: p {DiffieHellman.p}, g {DiffieHellman.g}, TheyPublicKey {DiffieHellman.TheyPublicKey}");
                         Notify?.Invoke($"Ключ создан: {DiffieHellman.Key}");
                         this.SendCommand(new ChatCommand
                         {
