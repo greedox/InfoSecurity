@@ -24,7 +24,7 @@ namespace InfoSecurity
             controller.Notify += UpdateMessages;
             var rnd = new Random();
             var primeGen = new PrimeNumberGenerator();
-            DiffieHellman.PrivateKey = (int)primeGen.SieveEratosthenes((uint)rnd.Next(10, 30)).Max();
+            DiffieHellman.PrivateKey = (int)primeGen.SieveEratosthenes((uint)rnd.Next(3, 20)).Max();
         }
 
         private void UpdateMessages(string message)
@@ -83,8 +83,8 @@ namespace InfoSecurity
         {
             var primeGen = new PrimeNumberGenerator();
             var rnd = new Random();
-            int g = (int)primeGen.SieveEratosthenes((uint)rnd.Next(10, 30)).Max();
-            int p = (int)primeGen.SieveEratosthenes((uint)rnd.Next(10, 30)).Max();
+            int g = (int)primeGen.SieveEratosthenes((uint)rnd.Next(3, 20)).Max();
+            int p = (int)primeGen.SieveEratosthenes((uint)rnd.Next(3, 20)).Max();
             DiffieHellman.g = g;
             DiffieHellman.p = p;
             var dhCmd = new ChatCommand

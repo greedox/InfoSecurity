@@ -34,7 +34,20 @@ namespace InfoSecurity
 
         public void SendCommand(ChatCommand command)
         {
-            if (command.Data is DiffieHellmanData) isInit = true;
+            switch (command.Type)
+            {
+                case CommandType.Message:
+                    var data = command.Data as MessageData;
+                    data.EncryptMessage();
+                    break;
+                case CommandType.DiffieHellmanInit:
+                    isInit = true;
+                    break;
+                case CommandType.DiffieHellmanEnd:
+                    break;
+                default:
+                    break;
+            }
 
             BinaryFormatter formatter = new BinaryFormatter();
             var stream = new MemoryStream();
