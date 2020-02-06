@@ -9,11 +9,7 @@ namespace InfoSecurity
     {
         enum Cipher
         {
-            Atbash,
-            Ceasar,
-            PolybiusSquare,
-            Vigenere,
-            XOR
+            Luciefer
         }
 
         private int key = 0;
@@ -32,20 +28,8 @@ namespace InfoSecurity
             string encText = string.Empty;
             switch (cipher)
             {
-                case Cipher.Atbash:
-                    encText = new Atbash().Encrypt(text);
-                    break;
-                case Cipher.Ceasar:
-                    encText = new CeasarCipher(key).Encrypt(text);
-                    break;
-                case Cipher.PolybiusSquare:
-                    encText = new PolybiusSquare(key.ToString()).Encrypt(text);
-                    break;
-                case Cipher.Vigenere:
-                    encText = new VigenereCipher(key.ToString()).Encrypt(text);
-                    break;
-                case Cipher.XOR:
-                    encText = new XORCipher(key.ToString()).Encrypt(text);
+                case Cipher.Luciefer:
+                    encText = new LucieferChipher(textBox_Key.Text).Encrypt(text);
                     break;
                 default:
                     break;
@@ -61,20 +45,8 @@ namespace InfoSecurity
             string decrText = string.Empty;
             switch (cipher)
             {
-                case Cipher.Atbash:
-                    decrText = new Atbash().Decrypt(text);
-                    break;
-                case Cipher.Ceasar:
-                    decrText = new CeasarCipher(key).Decrypt(text);
-                    break;
-                case Cipher.PolybiusSquare:
-                    decrText = new PolybiusSquare(key.ToString()).Decrypt(text);
-                    break;
-                case Cipher.Vigenere:
-                    decrText = new VigenereCipher(key.ToString()).Decrypt(text);
-                    break;
-                case Cipher.XOR:
-                    decrText = new XORCipher(key.ToString()).Decrypt(text);
+                case Cipher.Luciefer:
+                    decrText = new LucieferChipher(textBox_Key.Text).Decrypt(text);
                     break;
                 default:
                     break;
@@ -84,16 +56,30 @@ namespace InfoSecurity
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            label_Key.Text = $"Key: {key}";
+
         }
 
         private void button_KeyGen_Click(object sender, EventArgs e)
         {
-            PrimeNumberGenerator generator = new PrimeNumberGenerator();
-            Random random = new Random();
-            uint n = (uint)random.Next(int.MaxValue / 1000000, int.MaxValue / 100000);
-            key = (int)generator.SieveEratosthenes(n).Max();
-            label_Key.Text = $"Key: {key}";
+            int num_letters = 16;
+
+            // Создаем массив букв, которые мы будем использовать.
+            string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string fullAlphabet = alphabet.ToLower() + alphabet + "1234567890";
+            char[] letters = fullAlphabet.ToCharArray();
+
+            // Создаем генератор случайных чисел.
+            Random rand = new Random();
+
+            // Сделайте слово.
+            string word = "";
+            for (int j = 1; j <= num_letters; j++)
+            {
+                int letter_num = rand.Next(0, letters.Length - 1);
+                word += letters[letter_num];
+            }
+
+            textBox_Key.Text = word;
         }
     }
 }

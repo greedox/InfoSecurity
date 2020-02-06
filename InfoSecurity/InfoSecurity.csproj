@@ -60,6 +60,7 @@
     <Compile Include="EncrytpAlgoritms\Atbash.cs" />
     <Compile Include="EncrytpAlgoritms\CeasarCipher.cs" />
     <Compile Include="EncrytpAlgoritms\IEncryptable.cs" />
+    <Compile Include="EncrytpAlgoritms\LucieferChipher.cs" />
     <Compile Include="EncrytpAlgoritms\PolybiusSquare.cs" />
     <Compile Include="EncrytpAlgoritms\ScytaleCipher.cs" />
     <Compile Include="EncrytpAlgoritms\VigenereCipher.cs" />

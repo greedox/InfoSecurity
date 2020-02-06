@@ -83,6 +83,7 @@ namespace InfoSecurity
                 {
                     case CommandType.Message:
                         var msgData = (MessageData)cmd.Data;
+                        Notify?.Invoke(msgData.Message);
                         msgData.DecryptMessage();
                         string text = msgData.Message;
                         Notify?.Invoke(text);
